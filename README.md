@@ -14,7 +14,7 @@
 
 - **后端**: Python 3.8+, Flask 2.3
 - **数据库**: MySQL 8.0
-- **前端**: HTML5, CSS3, Jinja2
+- **前端**: HTML5, CSS3
 - **开发工具**: PyCharm, Git
 
 ## 📁 项目结构
