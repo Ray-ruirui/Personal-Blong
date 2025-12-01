@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}个人博客系统{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-blog"></i>
+                <a href=" 'index') }}">个人博客</a >
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> 首页</a >
+                <a href="{{ url_for('create_post') }}"><i class="fas fa-plus"></i> 写文章</a >
+                {% if session.get('user') %}
+                    <span class="user-info">
+                        <i class="fas fa-user"></i> {{ session['user'] }}
+                        <a href="{{ url_for('logout') }}" class="logout-btn">退出</a >
+                    </span>
+                {% else %}
+                    <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> 登录</a >
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert">
+                    {% for message in messages %}
+                        <p>{{ message }}</p >
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2024 个人博客系统 | 使用Flask + MySQL构建</p >
+            <p class="tech-stack">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Flask</span>
+                <span class="tech-tag">MySQL</span>
+                <span class="tech-tag">HTML/CSS</span>
+            </p >
+        </div>
+    </footer>
+
+    <script>
+        // 简单的确认对话框增强
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteLinks = document.querySelectorAll('a[onclick*="confirm"]');
+            deleteLinks.forEach(link => {
+                link.onclick = function(e) {
+                    if (!confirm('确定要删除这篇文章吗？此操作不可撤销。')) {
+                        e.preventDefault();
+                    }
+                };
+            });
+        });
+    </script>
+</body>
+</html>

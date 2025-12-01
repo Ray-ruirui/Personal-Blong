@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - 个人博客系统{% endblock %}
+
+{% block content %}
+<article class="post-detail">
+    <header class="post-header">
+        <nav class="breadcrumb">
+            <a href=" 'index') }}">首页</a > &gt;
+            <span>文章详情</span>
+        </nav>
+        
+        <h1 class="post-title">{{ post.title }}</h1>
+        
+        <div class="post-meta">
+            <div class="author-info">
+                <i class="fas fa-user-circle"></i>
+                <strong>{{ post.author }}</strong>
+            </div>
+            <div class="time-info">
+                <i class="fas fa-clock"></i>
+                <span>发布于 {{ post.formatted_date }}</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="post-content">
+        {{ post.content|replace('\n', '<br>')|safe }}
+    </div>
+
+    <div class="post-actions">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> 返回列表
+        </a >
+        <div>
+            <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> 编辑文章
+            </a >
+            <a href="{{ url_for('delete_post', post_id=post.id) }}" 
+               class="btn btn-danger"
+               onclick="return confirm('确定删除这篇文章吗？')">
+                <i class="fas fa-trash"></i> 删除文章
+            </a >
+        </div>
+    </div>
+</article>
+
+<!-- 评论区域 -->
+<section class="comments-section">
+    <h3><i class="fas fa-comments"></i> 评论 ({{ comments|length }})</h3>
+    
+    {% if comments %}
+    <div class="comments-list">
+        {% for comment in comments %}
+        <div class="comment">
+            <div class="comment-header">
+                <strong>{{ comment.author }}</strong>
+                <span class="comment-date">
+                    {{ comment.created_at.strftime('%Y-%m-%d %H:%M') if comment.created_at else '' }}
+                </span>
+            </div>
+            <div class="comment-content">
+                {{ comment.content }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-comments">
+        <p>还没有评论，快来第一个留言吧！</p >
+    </div>
+    {% endif %}
+    
+    <!-- 评论表单 -->
+    <form method="POST" action="{{ url_for('add_comment', post_id=post.id) }}" class="comment-form">
+        <h4>发表评论</h4>
+        <div class="form-group">
+            <label for="author">昵称：</label>
+            <input type="text" id="author" name="author" placeholder="请输入您的昵称" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="content">评论内容：</label>
+            <textarea id="content" name="content" rows="4" placeholder="请输入您的评论..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> 提交评论
+        </button>
+    </form>
+</section>
+{% endblock %}

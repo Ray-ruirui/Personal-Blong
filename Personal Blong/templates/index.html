@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}博客首页 - 个人博客系统{% endblock %}
+
+{% block content %}
+<div class="header-section">
+    <h1><i class="fas fa-book-open"></i> 我的博客</h1>
+    <p class="subtitle">分享知识、记录生活、交流思想</p >
+    <a href=" 'create_post') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> 新建文章
+    </a >
+</div>
+
+{% if posts %}
+    <div class="posts-container">
+        {% for post in posts %}
+        <article class="post-card">
+            <div class="post-header">
+                <h3 class="post-title">
+                    <a href="{{ url_for('view_post', post_id=post.id) }}">
+                        {% if post.title|length > 30 %}
+                            {{ post.title[:30] }}...
+                        {% else %}
+                            {{ post.title }}
+                        {% endif %}
+                    </a >
+                </h3>
+                <div class="post-meta">
+                    <span class="author">
+                        <i class="fas fa-user"></i> {{ post.author }}
+                    </span>
+                    <span class="date">
+                        <i class="fas fa-calendar"></i> {{ post.formatted_date }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="post-preview">
+                {% if post.content|length > 200 %}
+                    {{ post.content[:200] }}...
+                {% else %}
+                    {{ post.content }}
+                {% endif %}
+            </div>
+            
+            <div class="post-footer">
+                <a href="{{ url_for('view_post', post_id=post.id) }}" class="btn-read">
+                    <i class="fas fa-book-reader"></i> 阅读全文
+                </a >
+                <div class="post-actions">
+                    <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn-edit">
+                        <i class="fas fa-edit"></i> 编辑
+                    </a >
+                    <a href="{{ url_for('delete_post', post_id=post.id) }}" 
+                       class="btn-delete" 
+                       onclick="return confirm('确定删除《{{ post.title }}》吗？')">
+                        <i class="fas fa-trash"></i> 删除
+                    </a >
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <i class="fas fa-feather-alt empty-icon"></i>
+        <h3>还没有任何文章</h3>
+        <p>点击上方"新建文章"按钮，开始你的第一篇博客吧！</p >
+    </div>
+{% endif %}
+
+<div class="stats-section">
+    <div class="stat-card">
+        <i class="fas fa-file-alt"></i>
+        <h3>{{ posts|length }}</h3>
+        <p>文章总数</p >
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-user-friends"></i>
+        <h3>{{ posts|map(attribute='author')|unique|list|length }}</h3>
+        <p>作者数量</p >
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}写文章 - 个人博客系统{% endblock %}
+
+{% block content %}
+<div class="form-header">
+    <h1><i class="fas fa-pen-alt"></i> 写新文章</h1>
+    <p>分享你的知识和想法</p >
+</div>
+
+<form method="POST" action="{{ url_for('create_post') }}" class="post-form">
+    <div class="form-group">
+        <label for="title">文章标题 *</label>
+        <input type="text" id="title" name="title" 
+               placeholder="请输入文章标题，建议不超过50字" 
+               maxlength="100" required>
+        <small class="form-hint">一个好的标题能吸引更多读者</small>
+    </div>
+    
+    <div class="form-group">
+        <label for="author">作者</label>
+        <input type="text" id="author" name="author" 
+               placeholder="请输入作者名，默认为'匿名'" 
+               maxlength="50">
+    </div>
+    
+    <div class="form-group">
+        <label for="content">文章内容 *</label>
+        <textarea id="content" name="content" 
+                  placeholder="请输入文章内容，支持多段落..." 
+                  rows="15" required></textarea>
+        <small class="form-hint">支持Markdown格式（后续可扩展）</small>
+    </div>
+    
+    <div class="form-actions">
+        <a href=" 'index') }}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> 取消
+        </a >
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-check"></i> 发布文章
+        </button>
+        <button type="button" class="btn btn-outline" id="preview-btn">
+            <i class="fas fa-eye"></i> 预览
+        </button>
+    </div>
+</form>
+
+<!-- 预览区域 -->
+<div id="preview-area" class="preview-area" style="display: none;">
+    <h3>文章预览</h3>
+    <div class="preview-content">
+        <h4 id="preview-title"></h4>
+        <p id="preview-content"></p >
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const previewBtn = document.getElementById('preview-btn');
+        const previewArea = document.getElementById('preview-area');
+        const titleInput = document.getElementById('title');
+        const contentInput = document.getElementById('content');
+        
+        previewBtn.addEventListener('click', function() {
+            const title = titleInput.value || '（无标题）';
+            const content = contentInput.value || '（无内容）';
+            
+            document.getElementById('preview-title').textContent = title;
+            document.getElementById('preview-content').textContent = content;
+            
+            previewArea.style.display = 'block';
+            previewArea.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // 表单验证
+        const form = document.querySelector('.post-form');
+        form.addEventListener('submit', function(e) {
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+            
+            if (!title) {
+                e.preventDefault();
+                alert('请填写文章标题');
+                titleInput.focus();
+                return false;
+            }
+            
+            if (!content) {
+                e.preventDefault();
+                alert('请填写文章内容');
+                contentInput.focus();
+                return false;
+            }
+            
+            if (title.length > 100) {
+                e.preventDefault();
+                alert('标题不能超过100个字符');
+                titleInput.focus();
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock %}
